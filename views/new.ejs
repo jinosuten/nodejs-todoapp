@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ToDo APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+        <a href="/" class="header-logo">ToDo APP</a>
+    </header>
+    <form action="/create" method="post">
+        <input type="text" name="itemName" >
+        <input type="number" name="itemRank">
+        <input type="date" name="itemDeadline">
+        <input type="submit" value="作成する">
+    </form>
+    <a href="/index" class="cancel-button">もどる</a>
+  </body>
+</html>

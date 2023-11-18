@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ToDo APP</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <%- include('./error_messages'); %>
+    <% if(isAuth) { %>
+    <header>
+      <a href="/top" class="header-logo"  >TOP</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1>To Doリスト</h1>
+        <a href="/new" class="new-button">+ 新規作成</a>
+      </div>
+      <div class="index-table-wrapper">
+        <div class="table-head">
+          <span>To do</span>
+          <span>優先度</span>
+          <span>期限</span>
+        </div>
+        
+        <ul class="table-body">
+          <% items.forEach((item) => { %>
+            <li>
+              <script>
+                /* サーバーから受け取った日付文字列をブラウザのローカルタイムゾーンに合わせて補正 */
+                const dateStr = '<%= item.deadline %>'; // サーバーからの日付文字列を取得
+              
+                // サーバーからの日付文字列をパースしてローカルタイムゾーンの日付オブジェクトに変換
+                const localDate = new Date(dateStr);
+              
+                // 日本標準時（JST）に変換
+                const jstDate = new Date(localDate.getTime() + (localDate.getTimezoneOffset() + 9 * 60) * 60 * 1000); // JSTはUTC+9
+              
+                // "yyyy-mm-dd" 形式の文字列に変換
+                const year = jstDate.getFullYear();
+                const month = (jstDate.getMonth() + 1).toString().padStart(2, '0'); // 月は0から始まるため+1する
+                const day = jstDate.getDate().toString().padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+              
+                // 日付フィールドに設定
+                document.querySelector('input[name="itemDeadline"]').value = formattedDate;
+              </script>
+              
+              
+              <div class="item-data">
+                <span class="id-column"><% item.id %></span>
+                <span class="name-column"><%= item.name %></span>
+                <span class="rank-column"><%= item.rank %></span>
+                <span class="deadline-column"><%= new Date(item.deadline).toLocaleDateString('ja-JP') %></span>
+              </span>
+              </div>
+              <div class="item-menu">
+                <form action="/delete/<%= item.id %>" method="post">
+                  <input type="submit" value="削除">
+                </form>
+                <a href="/edit/<%= item.id %>">編集</a>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+        <% } else { %>
+          <h1>Welcome to the TodoApp</h1>
+          <a href="/signup">Sign up now!</a>
+        <% } %>
+        
+      </div>
+  </body>
+</html>
